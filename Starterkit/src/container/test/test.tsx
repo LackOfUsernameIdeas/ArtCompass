@@ -1,4 +1,6 @@
 import { FC, Fragment, useState } from "react";
+import MovieCard from './moviecard';
+
 
 interface Test {}
 
@@ -780,10 +782,19 @@ const Test: FC<Test> = () => {
                       <h2 className="text-xl font-semibold mb-4">
                         Нашите предложения:
                       </h2>
-                      {/* Content goes here; this will be scrollable if it exceeds max height */}
-                      <p>
-                        Your generated recommendations will be displayed here...
-                      </p>
+                      {/* Recommendations List */}
+                      <div className="space-y-4">
+                        {recommendationList.map((movie, index) => (
+                          <MovieCard
+                            key={index}
+                            title={movie.title}
+                            year={movie.year}
+                            director={movie.director}
+                            writer={movie.writer}
+                            poster={movie.poster}
+                            onSeeMore={() => handleSeeMore(movie)}
+                          />
+                        ))}
                     </div>
                   </div>
                 </div>
@@ -791,6 +802,7 @@ const Test: FC<Test> = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </Fragment>
   );
