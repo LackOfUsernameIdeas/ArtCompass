@@ -441,36 +441,43 @@ const Test: FC<Test> = () => {
   };
   console.log(submitCount);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    if (submitCount >= 20) {
-      alert("Достигнахте максималния брой предложения! :(");
-      return;
-    }
-    if (
-      !moods ||
-      !timeAvailability ||
-      !actors ||
-      !directors ||
-      !countries ||
-      !pacing ||
-      !depth ||
-      !targetGroup
-    ) {
-      alert("Моля, попълнете всички задължителни полета!");
-      return;
-    }
+    const handleSubmit = (event: React.FormEvent) => {
+      event.preventDefault();
 
-    const date = new Date().toISOString();
+      if (submitCount >= 20) {
+        alert("Достигнахте максималния брой предложения! :(");
+        return;
+      }
+      if (
+        !moods ||
+        !timeAvailability ||
+        !actors ||
+        !directors ||
+        !countries ||
+        !pacing ||
+        !depth ||
+        !targetGroup
+      ) {
+        alert("Моля, попълнете всички задължителни полета!");
+        return;
+      }
 
-    event.preventDefault();
-    generateMovieRecommendations(date);
-    saveUserPreferences(date);
+      document.body.classList.add('no-scroll');
 
-    setSubmitCount((prevCount) => prevCount + 1);
-    setIsModalOpen(true);
-  };
+      const date = new Date().toISOString();
 
-  const closeModal = () => setIsModalOpen(false);
+      event.preventDefault();
+      generateMovieRecommendations(date);
+      saveUserPreferences(date);
+
+      setSubmitCount((prevCount) => prevCount + 1);
+      setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+      setIsModalOpen(false);
+      document.body.classList.remove('no-scroll');
+    };
 
   const handleSeeMore = (movie: any) => {
     // Define what happens on "See More" click
@@ -757,7 +764,7 @@ const Test: FC<Test> = () => {
                 <small>{`${interests.length} / 200`}</small>
               </div>
             </div>
-
+                
             <div>
               <div className="ti-btn-list space-x-2 rtl:space-x-reverse mt-4">
                 <button
@@ -770,8 +777,8 @@ const Test: FC<Test> = () => {
               </div>
               {/* Modal */}
               {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                  <div className="bg-red rounded-lg p-6 max-w-md w-full relative overflow-y-auto max-h-80">
+                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                  <div className="modal-center p-6 w-full relative overflow-y-auto">
                     <button
                       className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
                       onClick={closeModal}
@@ -783,18 +790,22 @@ const Test: FC<Test> = () => {
                         Нашите предложения:
                       </h2>
                       {/* Recommendations List */}
-                      <div className="space-y-4">
+                      <div className="space-y-6">
                         {recommendationList.map((movie, index) => (
                           <MovieCard
                             key={index}
                             title={movie.title}
+                            bgName={movie.bgName}
                             year={movie.year}
+                            runtime={movie.runtime}
                             director={movie.director}
                             writer={movie.writer}
+                            imdbRating={movie.imdbRating}
                             poster={movie.poster}
                             onSeeMore={() => handleSeeMore(movie)}
                           />
                         ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -802,7 +813,6 @@ const Test: FC<Test> = () => {
             </div>
           </div>
         </div>
-      </div>
       </div>
     </Fragment>
   );

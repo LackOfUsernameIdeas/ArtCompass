@@ -19525,4 +19525,16 @@ input[type="color" i]::-webkit-color-swatch {
   margin-bottom: 0.5em;
 }
 
+/* Modal */
+.modal-center {
+  background-color: #8b1616;
+  border-radius: 15px;
+  max-width: 70%;
+  max-height: 45%;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
 /*# sourceMappingURL=style.css.map */
