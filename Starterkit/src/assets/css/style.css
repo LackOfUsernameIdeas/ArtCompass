@@ -19537,4 +19537,37 @@ input[type="color" i]::-webkit-color-swatch {
   overflow: hidden;
 }
 
+.object-cover {
+  height: 200px;
+  width: auto;
+}
+
+/* Custom scrollbar styling for the modal content */
+.modal-center::-webkit-scrollbar {
+  width: 12px;
+}
+
+.modal-center::-webkit-scrollbar-track {
+  background: #2d2d2d;
+  /* Dark background for the track */
+}
+
+.modal-center::-webkit-scrollbar-thumb {
+  background-color: #888;
+  /* Darker thumb color */
+  border-radius: 6px;
+  border: 3px solid #2d2d2d;
+  /* Border to create some spacing */
+}
+
+.modal-center::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+  /* Slightly lighter on hover */
+}
+
+.loader-img {
+  height: 20px;
+  width: auto;
+}
+
 /*# sourceMappingURL=style.css.map */

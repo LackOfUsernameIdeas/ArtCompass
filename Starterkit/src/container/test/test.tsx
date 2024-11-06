@@ -1,5 +1,6 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useState, useEffect } from "react";
 import MovieCard from './moviecard';
+import loaderIcon from '../../assets/images/loader-icon.png';
 
 
 interface Test {}
@@ -19,7 +20,9 @@ const Test: FC<Test> = () => {
 
   const [submitCount, setSubmitCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMoreinfoOpen, setIsMoreInfoOpen] = useState(false);
   const [recommendationList, setRecommendationList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const typeOptions = ["Филм", "Сериал"];
 
@@ -101,7 +104,8 @@ const Test: FC<Test> = () => {
     "Възрастни",
     "Семейни",
     "Семейство и деца",
-    "Възрастни над 65"
+    "Възрастни над 65",
+    "Нямам предпочитания"
   ];
 
   const token =
@@ -462,8 +466,9 @@ const Test: FC<Test> = () => {
         return;
       }
 
-      document.body.classList.add('no-scroll');
 
+
+      document.body.classList.add('no-scroll');
       const date = new Date().toISOString();
 
       event.preventDefault();
@@ -479,9 +484,15 @@ const Test: FC<Test> = () => {
       document.body.classList.remove('no-scroll');
     };
 
-  const handleSeeMore = (movie: any) => {
-    // Define what happens on "See More" click
-    alert(`More details for ${movie.title}`);
+    const closeMoreInfo = () => {
+      setIsMoreInfoOpen(false);
+      setIsModalOpen(true);
+    }
+
+    const handleSeeMore = (movie: any) => {
+      // Define what happens on "See More" click
+      setIsMoreInfoOpen(true);
+      setIsModalOpen(false);
   };
 
   const toggleGenre = (genre: { en: string; bg: string }) => {
@@ -500,7 +511,12 @@ const Test: FC<Test> = () => {
     );
   };
 
+  useEffect(() => {
+      if (recommendationList.length > 0) {
+        setLoading(false);
+      }}, [recommendationList]);
   console.log("recommendationList: ", recommendationList);
+  
   return (
     <Fragment>
       <div className="flex flex-col items-center justify-start min-h-screen pt-20 page-header-breadcrumb">
@@ -775,21 +791,42 @@ const Test: FC<Test> = () => {
                   Submit
                 </button>
               </div>
-              {/* Modal */}
+              
+              {isMoreinfoOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+              <div className="box-body">
+                <h6 className="box-title font-semibold">Horizontal cards are awesome!</h6>
+                <p className="card-text">This is a wider card with supporting text below as a natural .</p>
+              </div>
+                <button
+                  className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+                  onClick={closeMoreInfo}
+                >
+                  ✕
+                </button>
+              </div>
+              )}
+
               {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-                  <div className="modal-center p-6 w-full relative overflow-y-auto">
-                    <button
-                      className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                      onClick={closeModal}
-                    >
-                      ✕
-                    </button>
-                    <div className="text-center">
-                      <h2 className="text-xl font-semibold mb-4">
+              <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                <div className="modal-center p-6 w-full max-w-lg max-h-[80vh] relative overflow-y-auto bg-red-800 rounded-lg">
+                  <button
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+                    onClick={closeModal}
+                  >
+                    ✕
+                  </button>
+                  {loading ? (
+                    // Loading Icon
+                    <div className="flex items-center justify-center animate-spin loader-img">
+                      <img src={loaderIcon} alt="Loader Icon" />
+                    </div>
+                  ) : (
+                    // Recommendations List
+                    <div className="text-center modal-center">
+                      <h2 className="text-xl font-semibold mb-4 text-white">
                         Нашите предложения:
                       </h2>
-                      {/* Recommendations List */}
                       <div className="space-y-6">
                         {recommendationList.map((movie, index) => (
                           <MovieCard
@@ -807,8 +844,9 @@ const Test: FC<Test> = () => {
                         ))}
                       </div>
                     </div>
-                  </div>
+                  )}
                 </div>
+              </div>
               )}
             </div>
           </div>

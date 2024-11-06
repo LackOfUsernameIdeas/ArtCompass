@@ -20,7 +20,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, bgName, year, runtime, dir
         <img
           src={poster || 'https://via.placeholder.com/100x150'}
           alt={title}
-          className="w-full h-full object-cover rounded"
+          className="object-cover rounded"
         />
       </div>
       
