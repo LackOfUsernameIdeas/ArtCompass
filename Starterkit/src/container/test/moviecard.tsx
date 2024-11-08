@@ -1,18 +1,7 @@
 import React from 'react';
+import { MovieCardInit } from '../../types/types';
 
-interface MovieCardProps {
-  title: string;
-  bgName: string;
-  year: string;
-  runtime: string;
-  director: string;
-  writer: string;
-  imdbRating: number;
-  poster?: string;
-  onSeeMore: () => void;
-}
-
-const MovieCard: React.FC<MovieCardProps> = ({ title, bgName, year, runtime, director, writer, imdbRating, poster, onSeeMore }) => {
+const MovieCard: React.FC<MovieCardInit> = ({ title, bgName, year, runtime, director, writer, imdbRating, poster, onSeeMore }) => {
   return (
     <div className="flex border border-gray-200 rounded p-4 shadow">
       {/* Poster on the left */}

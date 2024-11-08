@@ -29,8 +29,8 @@ theme: {
     full: "9999px",
   },
   fontFamily: {
-    inter: ["Inter", "sans-serif"],
-    Montserrat: ["Montserrat","sans-serif"],
+    equilibrist: ["Equilibrist", "serif"],
+    opsilon: ["Opsilon","sans-serif"],
   },
   fontSize: {
     defaultsize: '0.813rem',

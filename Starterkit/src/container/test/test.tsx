@@ -1,7 +1,8 @@
 import { FC, Fragment, useState, useEffect } from "react";
 import MovieCard from './moviecard';
+import MoreInfo from './moreinfocard';
 import loaderIcon from '../../assets/images/loader-icon.png';
-
+import { Movie } from '../../types/types';
 
 interface Test {}
 
@@ -20,7 +21,8 @@ const Test: FC<Test> = () => {
 
   const [submitCount, setSubmitCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isMoreinfoOpen, setIsMoreInfoOpen] = useState(false);
+  const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);;
   const [recommendationList, setRecommendationList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -466,8 +468,6 @@ const Test: FC<Test> = () => {
         return;
       }
 
-
-
       document.body.classList.add('no-scroll');
       const date = new Date().toISOString();
 
@@ -487,13 +487,14 @@ const Test: FC<Test> = () => {
     const closeMoreInfo = () => {
       setIsMoreInfoOpen(false);
       setIsModalOpen(true);
+      setSelectedMovie(null);
     }
 
     const handleSeeMore = (movie: any) => {
-      // Define what happens on "See More" click
+      setSelectedMovie(movie);
       setIsMoreInfoOpen(true);
       setIsModalOpen(false);
-  };
+    };
 
   const toggleGenre = (genre: { en: string; bg: string }) => {
     setGenres((prevGenres) =>
@@ -792,19 +793,36 @@ const Test: FC<Test> = () => {
                 </button>
               </div>
               
-              {isMoreinfoOpen && (
-              <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-              <div className="box-body">
-                <h6 className="box-title font-semibold">Horizontal cards are awesome!</h6>
-                <p className="card-text">This is a wider card with supporting text below as a natural .</p>
-              </div>
-                <button
-                  className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
-                  onClick={closeMoreInfo}
-                >
-                  ✕
-                </button>
-              </div>
+              {isMoreInfoOpen && selectedMovie && (
+                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                  <div className="box-body">
+                    <MoreInfo
+                      title={selectedMovie.title}
+                      bgName={selectedMovie.bgName}
+                      year={selectedMovie.year}
+                      runtime={selectedMovie.runtime}
+                      director={selectedMovie.director}
+                      writer={selectedMovie.writer}
+                      imdbRating={selectedMovie.imdbRating}
+                      poster={selectedMovie.poster}
+                      plot={selectedMovie.plot}
+                      reason={selectedMovie.reason}
+                      genre={selectedMovie.genre}
+                      actors={selectedMovie.actors}
+                      country={selectedMovie.country}
+                      metascore={selectedMovie.metascore}
+                      type={selectedMovie.type}
+                      boxOffice={selectedMovie.boxOffice}
+                      totalSeasons={selectedMovie.totalSeasons}
+                    />
+                  </div>
+                  <button
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+                    onClick={closeMoreInfo}
+                  >
+                    ✕
+                  </button>
+                </div>
               )}
 
               {isModalOpen && (
