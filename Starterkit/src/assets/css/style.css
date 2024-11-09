@@ -121,13 +121,13 @@ Background Image
 @font-face{
   font-family: "SerifRegular";
   src: local("EquilibristRegular"),
-    url("./fonts/Equilibrist\ Light.ttf") format("truetype");
+    url("./fonts/EquilibristLight.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "SerifBold";
   src: local("EquilibristBold"),
-    url("./fonts/Equilibrist\ Bold.ttf") format("truetype");
+    url("./fonts/EquilibristBold.ttf") format("truetype");
 }
 
 @font-face {
