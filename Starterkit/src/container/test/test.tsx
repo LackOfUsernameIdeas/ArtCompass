@@ -1,4 +1,8 @@
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useState, useEffect } from "react";
+import MovieCard from './moviecard';
+import MoreInfo from './moreinfocard';
+import loaderIcon from '../../assets/images/loader-icon.png';
+import { Movie } from '../../types/types';
 
 interface Test {}
 
@@ -17,9 +21,13 @@ const Test: FC<Test> = () => {
 
   const [submitCount, setSubmitCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);;
   const [recommendationList, setRecommendationList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [visibleBubbles, setVisibleBubbles] = useState({ 1: false, 2: false, 3: false });
 
-  const typeOptions = ["Филм", "Сериал"];
+  const typeOptions = ["Филм", "Сериал", "Нямам предпочитания"];
 
   const genreOptions = [
     { en: "Action", bg: "Екшън" },
@@ -69,7 +77,7 @@ const Test: FC<Test> = () => {
     "Весел/-а",
     "Смутен/-на",
     "Озадачен/-на",
-    "Разревожен/-на",
+    "Разтревожен/-на",
     "Вдъхновен/-на",
     "Досаден/-на"
   ];
@@ -99,7 +107,8 @@ const Test: FC<Test> = () => {
     "Възрастни",
     "Семейни",
     "Семейство и деца",
-    "Възрастни над 65"
+    "Възрастни над 65",
+    "Нямам предпочитания"
   ];
 
   const token =
@@ -439,41 +448,54 @@ const Test: FC<Test> = () => {
   };
   console.log(submitCount);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    if (submitCount >= 20) {
-      alert("Достигнахте максималния брой предложения! :(");
-      return;
+    const handleSubmit = (event: React.FormEvent) => {
+      event.preventDefault();
+
+      if (submitCount >= 20) {
+        alert("Достигнахте максималния брой предложения! :(");
+        return;
+      }
+      if (
+        !moods ||
+        !timeAvailability ||
+        !actors ||
+        !directors ||
+        !countries ||
+        !pacing ||
+        !depth ||
+        !targetGroup
+      ) {
+        alert("Моля, попълнете всички задължителни полета!");
+        return;
+      }
+
+      document.body.classList.add('no-scroll');
+      const date = new Date().toISOString();
+
+      event.preventDefault();
+      generateMovieRecommendations(date);
+      saveUserPreferences(date);
+
+      setSubmitCount((prevCount) => prevCount + 1);
+      setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+      setIsModalOpen(false);
+      document.body.classList.remove('no-scroll');
+    };
+
+    const closeMoreInfo = () => {
+      setIsMoreInfoOpen(false);
+      setIsModalOpen(true);
+      setSelectedMovie(null);
     }
-    if (
-      !moods ||
-      !timeAvailability ||
-      !actors ||
-      !directors ||
-      !countries ||
-      !pacing ||
-      !depth ||
-      !targetGroup
-    ) {
-      alert("Моля, попълнете всички задължителни полета!");
-      return;
-    }
 
-    const date = new Date().toISOString();
-
-    event.preventDefault();
-    generateMovieRecommendations(date);
-    saveUserPreferences(date);
-
-    setSubmitCount((prevCount) => prevCount + 1);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => setIsModalOpen(false);
-
-  const handleSeeMore = (movie: any) => {
-    // Define what happens on "See More" click
-    alert(`More details for ${movie.title}`);
-  };
+    const handleSeeMore = (movie: any) => {
+      setSelectedMovie(movie);
+      setIsMoreInfoOpen(true);
+      setIsModalOpen(false);
+    };
 
   const toggleGenre = (genre: { en: string; bg: string }) => {
     setGenres((prevGenres) =>
@@ -491,37 +513,50 @@ const Test: FC<Test> = () => {
     );
   };
 
+  useEffect(() => {
+    if (recommendationList.length > 0) {
+      setLoading(false);
+    }
+  }, [recommendationList]);
   console.log("recommendationList: ", recommendationList);
+
+  const revealBubble = (bubbleIndex: number) => {
+    setVisibleBubbles((prev) => ({ ...prev, [bubbleIndex]: true }));
+  };
+
   return (
     <Fragment>
       <div className="flex flex-col items-center justify-start min-h-screen pt-20 page-header-breadcrumb">
         <div className="grid grid-cols-16 gap-1">
           <div className="xl:col-span-6 col-span-16">
             <div className="mb-4">
-              <h6 className="questionTxt bubble left">
+              <label className="questionTxt bubble left inflate-left">
                 Какво търсите - филм или сериал?
-              </h6>
-              <div className="bubble right">
+              </label>
+              <div className="bubble right inflate-right">
                 <select
                   id="type"
-                  className="form-control"
+                  className="form-control selectionList"
                   value={type}
-                  onChange={(e) => setType(e.target.value)}
+                  onChange={(e) => {
+                    setType(e.target.value);
+                  }}
                   required
                 >
                   {typeOptions.map((option) => (
-                    <option key={option} value={option}>
+                    <option key={option} value={option} className="selectionList">
                       {option}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
+
             <div className="mb-4">
-              <h6 className="questionTxt bubble left">
+              <label className="questionTxt bubble left inflate-left">
                 Кои жанрове Ви се гледат в момента?
-              </h6>
-              <div className="bubble right multiCh MChitem">
+              </label>
+              <div className="bubble right multiCh MChitem inflate-right">
                 {genreOptions.map((genre) => (
                   <div key={genre.en}>
                     <label>
@@ -531,7 +566,10 @@ const Test: FC<Test> = () => {
                         checked={
                           genres.find((g) => g.en === genre.en) !== undefined
                         }
-                        onChange={() => toggleGenre(genre)}
+                        onChange={() => {
+                          toggleGenre(genre)
+                          revealBubble(1);
+                        }}
                         required
                       />
                       {genre.bg}
@@ -540,11 +578,12 @@ const Test: FC<Test> = () => {
                 ))}
               </div>
             </div>
+
             <div className="mb-4">
-              <h6 className="questionTxt bubble left">
+              <label className={`questionTxt bubble left ${visibleBubbles[2] ? 'inflate-left' : ''}`}>
                 Как се чувствате в момента?
-              </h6>
-              <div className="bubble right multiCh MChitem">
+              </label>
+              <div className={`bubble right multiCh MChitem ${visibleBubbles[2] ? 'inflate-right' : ''}`}>
                 {moodOptions.map((mood) => (
                   <div key={mood}>
                     <label>
@@ -552,7 +591,9 @@ const Test: FC<Test> = () => {
                         type="checkbox"
                         value={mood}
                         checked={moods.includes(mood)}
-                        onChange={() => toggleMood(mood)}
+                        onChange={() => {
+                          toggleMood(mood);
+                        }}
                         required
                       />
                       {mood}
@@ -562,41 +603,44 @@ const Test: FC<Test> = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="timeAvailability" className="form-label">
+              <label className="questionTxt bubble left inflate-left">
                 С какво време за гледане разполагате?
               </label>
-              <select
-                id="timeAvailability"
-                className="form-control"
-                value={timeAvailability}
-                onChange={(e) => setTimeAvailability(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Изберете време
-                </option>
-                {timeAvailabilityOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
+              <div className="bubble right inflate-right">
+                <select
+                  id="timeAvailability"
+                  className="form-control selectionList"
+                  value={timeAvailability}
+                  onChange={(e) => setTimeAvailability(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Изберете време
                   </option>
-                ))}
-              </select>
+                  {timeAvailabilityOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="formGroupExampleInput2" className="form-label">
+              <label htmlFor="formGroupExampleInput2" className="questionTxt bubble left inflate-left">
                 Кои са вашите любими актьори?
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control bubble right inflate-right"
                 placeholder="Пример: Брад Пит, Леонардо ди Каприо, Ема Уотсън"
                 value={actors}
                 onChange={(e) => setActors(e.target.value)}
                 required
               />
-              <label>
+              <label className="bubble right checkboxLabel">
                 <input
                   type="checkbox"
+                  className="checkboxInput"
                   checked={actors === "Нямам предпочитания"}
                   onChange={() => {
                     setActors(
@@ -611,21 +655,22 @@ const Test: FC<Test> = () => {
               </label>
             </div>
             <div className="mb-4">
-              <label htmlFor="formGroupExampleInput2" className="form-label">
+              <label htmlFor="formGroupExampleInput2" className="questionTxt bubble left inflate-left">
                 Кои филмови режисьори предпочитате?
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control bubble right bubble right inflate-right selectionList"
                 id="formGroupExampleInput2"
                 placeholder="Пример: Дъфър брадърс, Стивън Спилбърг, Джеки Чан"
                 value={directors}
                 onChange={(e) => setDirectors(e.target.value)}
                 required
               />
-              <label>
+              <label className="bubble right checkboxLabel">
                 <input
                   type="checkbox"
+                  className="checkboxInput"
                   checked={directors === "Нямам предпочитания"}
                   onChange={() => {
                     setDirectors(
@@ -640,21 +685,22 @@ const Test: FC<Test> = () => {
               </label>
             </div>
             <div className="mb-4">
-              <label htmlFor="formGroupExampleInput2" className="form-label">
+              <label htmlFor="formGroupExampleInput2" className="questionTxt bubble left inflate-left">
                 От кои страни предпочитате да е филмът/сериалът?
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control bubble right bubble right inflate-right selectionList"
                 id="formGroupExampleInput2"
                 placeholder="Пример: България, САЩ"
                 value={countries}
                 onChange={(e) => setCountries(e.target.value)}
                 required
               />
-              <label>
+              <label className="bubble right checkboxLabel">
                 <input
                   type="checkbox"
+                  className="checkboxInput"
                   checked={countries === "Нямам предпочитания"}
                   onChange={() => {
                     setCountries(
@@ -669,17 +715,18 @@ const Test: FC<Test> = () => {
               </label>
             </div>
             <div className="mb-4">
-              <label htmlFor="pacing" className="form-label">
+              <label htmlFor="pacing" className="questionTxt bubble left inflate-left">
                 Филми/Сериали с каква бързина на развитие на сюжетното действие
                 предпочитате?
               </label>
-              <select
-                id="pacing"
-                className="form-control"
-                value={pacing}
-                onChange={(e) => setPacing(e.target.value)}
-                required
-              >
+              <div className="bubble right inflate-right">
+                <select
+                  id="pacing"
+                  className="form-control selectionList"
+                  value={pacing}
+                  onChange={(e) => setPacing(e.target.value)}
+                  required
+                >
                 <option value="" disabled>
                   Изберете бързина на развитие
                 </option>
@@ -688,15 +735,17 @@ const Test: FC<Test> = () => {
                     {option}
                   </option>
                 ))}
-              </select>
+                </select>
+              </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="depth" className="form-label">
+              <label htmlFor="depth" className="questionTxt bubble left inflate-left">
                 Филми/Сериали с какво ниво на задълбочаване харесвате?
               </label>
-              <select
+              <div className="bubble right inflate-right">
+                <select
                 id="depth"
-                className="form-control"
+                className="form-control selectionList"
                 value={depth}
                 onChange={(e) => setDepth(e.target.value)}
                 required
@@ -710,14 +759,16 @@ const Test: FC<Test> = () => {
                   </option>
                 ))}
               </select>
+              </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="targetGroup" className="form-label">
+              <label htmlFor="targetGroup" className="questionTxt bubble left inflate-left">
                 Каква е вашата целева група?
               </label>
-              <select
+              <div className="bubble right inflate-right">
+                <select
                 id="targetGroup"
-                className="form-control"
+                className="form-control selectionList"
                 value={targetGroup}
                 onChange={(e) => setTargetGroup(e.target.value)}
                 required
@@ -731,9 +782,10 @@ const Test: FC<Test> = () => {
                   </option>
                 ))}
               </select>
+              </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="formGroupExampleInput2" className="form-label">
+              <label htmlFor="formGroupExampleInput2" className="questionTxt bubble left inflate-left">
                 Какви теми ви интересуват?
               </label>
               <div className="form-text">
@@ -743,7 +795,7 @@ const Test: FC<Test> = () => {
                 да споделите примери за филми/сериали, които предпочитате.
               </div>
               <textarea
-                className="form-control"
+                className="form-control bubble right"
                 id="formGroupExampleInput2"
                 placeholder="Опишете темите, които ви интересуват"
                 value={interests}
@@ -755,7 +807,7 @@ const Test: FC<Test> = () => {
                 <small>{`${interests.length} / 200`}</small>
               </div>
             </div>
-
+                
             <div>
               <div className="ti-btn-list space-x-2 rtl:space-x-reverse mt-4">
                 <button
@@ -766,27 +818,75 @@ const Test: FC<Test> = () => {
                   Submit
                 </button>
               </div>
-              {/* Modal */}
+              
+              {isMoreInfoOpen && selectedMovie && (
+                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                  <div className="box-body">
+                    <MoreInfo
+                      title={selectedMovie.title}
+                      bgName={selectedMovie.bgName}
+                      year={selectedMovie.year}
+                      runtime={selectedMovie.runtime}
+                      director={selectedMovie.director}
+                      writer={selectedMovie.writer}
+                      imdbRating={selectedMovie.imdbRating}
+                      poster={selectedMovie.poster}
+                      plot={selectedMovie.plot}
+                      reason={selectedMovie.reason}
+                      genre={selectedMovie.genre}
+                      actors={selectedMovie.actors}
+                      country={selectedMovie.country}
+                      metascore={selectedMovie.metascore}
+                      type={selectedMovie.type}
+                      boxOffice={selectedMovie.boxOffice}
+                      totalSeasons={selectedMovie.totalSeasons}
+                    />
+                  </div>
+                  <button
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+                    onClick={closeMoreInfo}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
               {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                  <div className="bg-red rounded-lg p-6 max-w-md w-full relative overflow-y-auto max-h-80">
-                    <button
-                      className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                      onClick={closeModal}
-                    >
-                      ✕
-                    </button>
-                    <div className="text-center">
-                      <h2 className="text-xl font-semibold mb-4">
+              <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                <div className="modal-center p-6 w-full max-w-lg max-h-[80vh] relative overflow-y-auto bg-red-800 rounded-lg">
+                  <button
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+                    onClick={closeModal}
+                  >
+                    ✕
+                  </button>
+                  {loading ? (
+                    // Loading Icon
+                    <div className="flex items-center justify-center animate-spin loader-img">
+                      <img src={loaderIcon} alt="Loader Icon" />
+                    </div>
+                  ) : (
+                    // Recommendations List
+                    <div className="text-center modal-center">
+                      <h2 className="text-xl font-semibold mb-4 text-white">
                         Нашите предложения:
                       </h2>
-                      {/* Content goes here; this will be scrollable if it exceeds max height */}
-                      <p>
-                        Your generated recommendations will be displayed here...
-                      </p>
+                      <div className="space-y-6">
+                        {recommendationList.map((movie, index) => (
+                          <MovieCard
+                            key={index}
+                            title={movie.title}
+                            bgName={movie.bgName}
+                            reason={movie.reason}
+                            poster={movie.poster}
+                            onSeeMore={() => handleSeeMore(movie)}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
+              </div>
               )}
             </div>
           </div>
