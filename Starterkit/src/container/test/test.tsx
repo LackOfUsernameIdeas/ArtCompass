@@ -25,8 +25,9 @@ const Test: FC<Test> = () => {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);;
   const [recommendationList, setRecommendationList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [visibleBubbles, setVisibleBubbles] = useState({ 1: false, 2: false, 3: false });
 
-  const typeOptions = ["Филм", "Сериал"];
+  const typeOptions = ["Филм", "Сериал", "Нямам предпочитания"];
 
   const genreOptions = [
     { en: "Action", bg: "Екшън" },
@@ -76,7 +77,7 @@ const Test: FC<Test> = () => {
     "Весел/-а",
     "Смутен/-на",
     "Озадачен/-на",
-    "Разревожен/-на",
+    "Разтревожен/-на",
     "Вдъхновен/-на",
     "Досаден/-на"
   ];
@@ -513,41 +514,49 @@ const Test: FC<Test> = () => {
   };
 
   useEffect(() => {
-      if (recommendationList.length > 0) {
-        setLoading(false);
-      }}, [recommendationList]);
+    if (recommendationList.length > 0) {
+      setLoading(false);
+    }
+  }, [recommendationList]);
   console.log("recommendationList: ", recommendationList);
-  
+
+  const revealBubble = (bubbleIndex: number) => {
+    setVisibleBubbles((prev) => ({ ...prev, [bubbleIndex]: true }));
+  };
+
   return (
     <Fragment>
       <div className="flex flex-col items-center justify-start min-h-screen pt-20 page-header-breadcrumb">
         <div className="grid grid-cols-16 gap-1">
           <div className="xl:col-span-6 col-span-16">
             <div className="mb-4">
-              <h6 className="questionTxt bubble left">
+              <label className="questionTxt bubble left inflate-left">
                 Какво търсите - филм или сериал?
-              </h6>
-              <div className="bubble right">
+              </label>
+              <div className="bubble right inflate-right">
                 <select
                   id="type"
-                  className="form-control"
+                  className="form-control selectionList"
                   value={type}
-                  onChange={(e) => setType(e.target.value)}
+                  onChange={(e) => {
+                    setType(e.target.value);
+                  }}
                   required
                 >
                   {typeOptions.map((option) => (
-                    <option key={option} value={option}>
+                    <option key={option} value={option} className="selectionList">
                       {option}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
+
             <div className="mb-4">
-              <h6 className="questionTxt bubble left">
+              <label className="questionTxt bubble left inflate-left">
                 Кои жанрове Ви се гледат в момента?
-              </h6>
-              <div className="bubble right multiCh MChitem">
+              </label>
+              <div className="bubble right multiCh MChitem inflate-right">
                 {genreOptions.map((genre) => (
                   <div key={genre.en}>
                     <label>
@@ -557,7 +566,10 @@ const Test: FC<Test> = () => {
                         checked={
                           genres.find((g) => g.en === genre.en) !== undefined
                         }
-                        onChange={() => toggleGenre(genre)}
+                        onChange={() => {
+                          toggleGenre(genre)
+                          revealBubble(1);
+                        }}
                         required
                       />
                       {genre.bg}
@@ -566,11 +578,12 @@ const Test: FC<Test> = () => {
                 ))}
               </div>
             </div>
+
             <div className="mb-4">
-              <h6 className="questionTxt bubble left">
+              <label className={`questionTxt bubble left ${visibleBubbles[2] ? 'inflate-left' : ''}`}>
                 Как се чувствате в момента?
-              </h6>
-              <div className="bubble right multiCh MChitem">
+              </label>
+              <div className={`bubble right multiCh MChitem ${visibleBubbles[2] ? 'inflate-right' : ''}`}>
                 {moodOptions.map((mood) => (
                   <div key={mood}>
                     <label>
@@ -578,7 +591,9 @@ const Test: FC<Test> = () => {
                         type="checkbox"
                         value={mood}
                         checked={moods.includes(mood)}
-                        onChange={() => toggleMood(mood)}
+                        onChange={() => {
+                          toggleMood(mood);
+                        }}
                         required
                       />
                       {mood}
@@ -588,41 +603,44 @@ const Test: FC<Test> = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="timeAvailability" className="form-label">
+              <label className="questionTxt bubble left inflate-left">
                 С какво време за гледане разполагате?
               </label>
-              <select
-                id="timeAvailability"
-                className="form-control"
-                value={timeAvailability}
-                onChange={(e) => setTimeAvailability(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Изберете време
-                </option>
-                {timeAvailabilityOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
+              <div className="bubble right inflate-right">
+                <select
+                  id="timeAvailability"
+                  className="form-control selectionList"
+                  value={timeAvailability}
+                  onChange={(e) => setTimeAvailability(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Изберете време
                   </option>
-                ))}
-              </select>
+                  {timeAvailabilityOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="formGroupExampleInput2" className="form-label">
+              <label htmlFor="formGroupExampleInput2" className="questionTxt bubble left inflate-left">
                 Кои са вашите любими актьори?
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control bubble right inflate-right"
                 placeholder="Пример: Брад Пит, Леонардо ди Каприо, Ема Уотсън"
                 value={actors}
                 onChange={(e) => setActors(e.target.value)}
                 required
               />
-              <label>
+              <label className="bubble right checkboxLabel">
                 <input
                   type="checkbox"
+                  className="checkboxInput"
                   checked={actors === "Нямам предпочитания"}
                   onChange={() => {
                     setActors(
@@ -637,21 +655,22 @@ const Test: FC<Test> = () => {
               </label>
             </div>
             <div className="mb-4">
-              <label htmlFor="formGroupExampleInput2" className="form-label">
+              <label htmlFor="formGroupExampleInput2" className="questionTxt bubble left inflate-left">
                 Кои филмови режисьори предпочитате?
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control bubble right bubble right inflate-right selectionList"
                 id="formGroupExampleInput2"
                 placeholder="Пример: Дъфър брадърс, Стивън Спилбърг, Джеки Чан"
                 value={directors}
                 onChange={(e) => setDirectors(e.target.value)}
                 required
               />
-              <label>
+              <label className="bubble right checkboxLabel">
                 <input
                   type="checkbox"
+                  className="checkboxInput"
                   checked={directors === "Нямам предпочитания"}
                   onChange={() => {
                     setDirectors(
@@ -666,21 +685,22 @@ const Test: FC<Test> = () => {
               </label>
             </div>
             <div className="mb-4">
-              <label htmlFor="formGroupExampleInput2" className="form-label">
+              <label htmlFor="formGroupExampleInput2" className="questionTxt bubble left inflate-left">
                 От кои страни предпочитате да е филмът/сериалът?
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control bubble right bubble right inflate-right selectionList"
                 id="formGroupExampleInput2"
                 placeholder="Пример: България, САЩ"
                 value={countries}
                 onChange={(e) => setCountries(e.target.value)}
                 required
               />
-              <label>
+              <label className="bubble right checkboxLabel">
                 <input
                   type="checkbox"
+                  className="checkboxInput"
                   checked={countries === "Нямам предпочитания"}
                   onChange={() => {
                     setCountries(
@@ -695,17 +715,18 @@ const Test: FC<Test> = () => {
               </label>
             </div>
             <div className="mb-4">
-              <label htmlFor="pacing" className="form-label">
+              <label htmlFor="pacing" className="questionTxt bubble left inflate-left">
                 Филми/Сериали с каква бързина на развитие на сюжетното действие
                 предпочитате?
               </label>
-              <select
-                id="pacing"
-                className="form-control"
-                value={pacing}
-                onChange={(e) => setPacing(e.target.value)}
-                required
-              >
+              <div className="bubble right inflate-right">
+                <select
+                  id="pacing"
+                  className="form-control selectionList"
+                  value={pacing}
+                  onChange={(e) => setPacing(e.target.value)}
+                  required
+                >
                 <option value="" disabled>
                   Изберете бързина на развитие
                 </option>
@@ -714,15 +735,17 @@ const Test: FC<Test> = () => {
                     {option}
                   </option>
                 ))}
-              </select>
+                </select>
+              </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="depth" className="form-label">
+              <label htmlFor="depth" className="questionTxt bubble left inflate-left">
                 Филми/Сериали с какво ниво на задълбочаване харесвате?
               </label>
-              <select
+              <div className="bubble right inflate-right">
+                <select
                 id="depth"
-                className="form-control"
+                className="form-control selectionList"
                 value={depth}
                 onChange={(e) => setDepth(e.target.value)}
                 required
@@ -736,14 +759,16 @@ const Test: FC<Test> = () => {
                   </option>
                 ))}
               </select>
+              </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="targetGroup" className="form-label">
+              <label htmlFor="targetGroup" className="questionTxt bubble left inflate-left">
                 Каква е вашата целева група?
               </label>
-              <select
+              <div className="bubble right inflate-right">
+                <select
                 id="targetGroup"
-                className="form-control"
+                className="form-control selectionList"
                 value={targetGroup}
                 onChange={(e) => setTargetGroup(e.target.value)}
                 required
@@ -757,9 +782,10 @@ const Test: FC<Test> = () => {
                   </option>
                 ))}
               </select>
+              </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="formGroupExampleInput2" className="form-label">
+              <label htmlFor="formGroupExampleInput2" className="questionTxt bubble left inflate-left">
                 Какви теми ви интересуват?
               </label>
               <div className="form-text">
@@ -769,7 +795,7 @@ const Test: FC<Test> = () => {
                 да споделите примери за филми/сериали, които предпочитате.
               </div>
               <textarea
-                className="form-control"
+                className="form-control bubble right"
                 id="formGroupExampleInput2"
                 placeholder="Опишете темите, които ви интересуват"
                 value={interests}
@@ -851,11 +877,7 @@ const Test: FC<Test> = () => {
                             key={index}
                             title={movie.title}
                             bgName={movie.bgName}
-                            year={movie.year}
-                            runtime={movie.runtime}
-                            director={movie.director}
-                            writer={movie.writer}
-                            imdbRating={movie.imdbRating}
+                            reason={movie.reason}
                             poster={movie.poster}
                             onSeeMore={() => handleSeeMore(movie)}
                           />

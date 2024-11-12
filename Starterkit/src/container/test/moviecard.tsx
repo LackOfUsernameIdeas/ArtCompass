@@ -1,7 +1,7 @@
 import React from 'react';
 import { MovieCardInit } from '../../types/types';
 
-const MovieCard: React.FC<MovieCardInit> = ({ title, bgName, year, runtime, director, writer, imdbRating, poster, onSeeMore }) => {
+const MovieCard: React.FC<MovieCardInit> = ({ title, bgName, reason, poster, onSeeMore }) => {
   return (
     <div className="flex border border-gray-200 rounded p-4 shadow">
       {/* Poster on the left */}
@@ -16,11 +16,8 @@ const MovieCard: React.FC<MovieCardInit> = ({ title, bgName, year, runtime, dire
       {/* Details on the right */}
       <div className="w-3/4 pl-4">
         <h3 className="text-lg font-semibold">{title} / {bgName}</h3>
-        <p className="text-gray-600"><strong> Година: </strong>{year}</p>
-        <p className="text-gray-600"><strong> Продължителност: </strong>{runtime}</p>
-        <p className="text-gray-600"><strong> Режисьори:</strong> {director}</p>
-        <p className="text-gray-600"><strong> Сценаристи: </strong>{writer}</p>
-        <p className="text-gray-600"><strong> Рейтинг в IMDB: </strong>{imdbRating}</p>
+        <h5 className="text-gray-600"><strong> Защо този филм е подходящ за Вас? </strong></h5>
+        <h6>{reason}</h6>
 
         {/* See More button */}
         <button

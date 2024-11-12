@@ -19508,40 +19508,114 @@ input[type="color" i]::-webkit-color-swatch {
   --t: 1.5em;
   /* the size of the tail */
 
-  max-width: 50%;
+  font-size: 1.5em;
   padding: 1em;
   border-inline: var(--t) solid #0000;
   border-radius: calc(var(--r) + var(--t))/var(--r);
   mask:
     radial-gradient(100% 100% at var(--_p) 0, #0000 99%, #000 102%) var(--_p) 100%/var(--t) var(--t) no-repeat,
     linear-gradient(#000 0 0) padding-box;
-  background: linear-gradient(135deg, #6f3508, #fd3636) border-box;
   color: #fff;
-} 
+}
 
 .left {
+  max-width: 40%;
   text-align: left;
   --_p: 0;
   border-bottom-left-radius: 0 0;
+  background: linear-gradient(135deg, #6f3508, #fd3636) border-box;
   place-self: start;
 }
 
 .right {
+  max-width: 60%;
+  --_p: 1;
+  --r: 2em !important;
+  --t: 2.5em !important;
   color: #f09433;
   margin-left: 50%;
   border-bottom-right-radius: 0 0;
+  background: linear-gradient(135deg, #fd3636, #6f3508) border-box;
   place-self: end;
 }
 
 .multiCh {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5em;
   margin-left: 40% !important;
 }
 
 .MChitem {
   margin-bottom: 0.5em;
+}
+
+select.selectionList {
+  appearance: none;
+  background: transparent;
+  color: #fff;
+  padding: 2em 0.8em 1.5em 0.8;
+  border-radius: 25px;
+  border: none;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+/* Remove the blue highlight when selecting an option */
+select.selectionList:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Customize dropdown arrow */
+select.selectionList::after {
+  content: '▼';
+  position: absolute;
+  right: 1em;
+  color: #fff;
+  pointer-events: none;
+}
+
+/* Style dropdown options */
+option.selectionList {
+  background: #333;
+  /* Darker background for dropdown items */
+  color: #fff;
+  /* White text for better readability */
+  padding: 0.5em;
+  font-size: 1em;
+}
+
+@keyframes inflateFromLeft {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes inflateFromRight {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.inflate-left {
+  animation: inflateFromLeft 0.7s ease forwards;
+}
+
+.inflate-right {
+  animation: inflateFromRight 0.7s ease forwards;
 }
 
 /* Modal */

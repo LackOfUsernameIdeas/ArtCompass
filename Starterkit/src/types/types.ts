@@ -21,11 +21,7 @@ export interface Movie {
 export interface MovieCardInit {
   title: string;
   bgName: string;
-  year: string;
-  runtime: string;
-  director: string;
-  writer: string;
-  imdbRating: number;
+  reason: string;
   poster?: string;
   onSeeMore: () => void;
 }
