@@ -51,6 +51,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               path="individualStats/books"
               element={<BooksIndividualStats />}
             />
+            {/* <Route
+              path="recommendations"
+              element={<MoviesSeriesRecommendations />}
+            />
+            <Route
+              path="individualStats"
+              element={<MoviesSeriesIndividualStats />}
+            /> */}
             <Route path="test" element={<Test />} />
             <Route path="contact" element={<Contact />} />
           </Route>
