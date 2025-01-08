@@ -35,7 +35,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           >
             {/* Default route */}
             <Route index path="home" element={<Home />} />
-            <Route
+            {/* <Route
               path="recommendations/movies_series"
               element={<MoviesSeriesRecommendations />}
             />
@@ -50,15 +50,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route
               path="individualStats/books"
               element={<BooksIndividualStats />}
-            />
-            {/* <Route
+            /> */}
+            <Route
               path="recommendations"
               element={<MoviesSeriesRecommendations />}
             />
             <Route
               path="individualStats"
               element={<MoviesSeriesIndividualStats />}
-            /> */}
+            />
             <Route path="test" element={<Test />} />
             <Route path="contact" element={<Contact />} />
           </Route>
