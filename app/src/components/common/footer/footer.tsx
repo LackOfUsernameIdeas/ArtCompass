@@ -26,14 +26,18 @@ const Footer: FC = () => (
             <div className="footer-column">
               <div className="brand-name">
                 <span className="footer-brand-name-art dark:text-[#610000] text-[#AF0B48]">
-                  КИНО
+                  АРТ
                 </span>
                 <span className="footer-brand-name-compass">КОМПАС</span>
               </div>
               <ul className="footer-links">
-                <li>НЕТИТ „Джон Атанасов” 2024</li>
-                <li>Калоян Костадинов</li>
-                <li>Мария Малчева</li>
+                <li>НОИТ 2025</li>
+                <li>
+                  Калоян Костадинов <b>11Б</b>
+                </li>
+                <li>
+                  Мария Малчева <b>12Б</b>
+                </li>
                 <li>
                   <a
                     href="https://pgi-pernik.bg-schools.com/"
