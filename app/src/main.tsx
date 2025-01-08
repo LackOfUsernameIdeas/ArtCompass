@@ -16,7 +16,6 @@ import Home from "./container/home/Home.tsx";
 import MoviesSeriesIndividualStats from "./container/individualStats/movies_series/MoviesSeriesIndividualStats.tsx";
 import BooksIndividualStats from "./container/individualStats/books/BooksIndividualStats.tsx";
 import Contact from "./container/contact/Contact.tsx";
-import Test from "./container/test/test.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.Fragment>
