@@ -59,7 +59,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               path="individualStats"
               element={<MoviesSeriesIndividualStats />}
             />
-            <Route path="test" element={<Test />} />
             <Route path="contact" element={<Contact />} />
           </Route>
 
