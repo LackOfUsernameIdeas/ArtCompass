@@ -2179,6 +2179,34 @@ io.on("connection", (socket) => {
   });
 });
 
+// // Когато клиент се свърже със SocketIO сървъра
+// io.on("connection", (socket) => {
+//   console.log("Клиент се свърза");
+
+//   // Това ще изпрати първоначален сигнал на клиента, който се свързва.
+//   socket.emit("connectSignal");
+
+//   // Слушане на събитието 'hardwareData' от изпращащото приложение (python app)
+//   socket.on("hardwareData", (data) => {
+//     console.log("Получени хардуерни данни:", data);
+
+//     // Изпращане на данните към всички свързани клиенти, освен към изпращащия (защото е безсмислено)
+//     socket.broadcast.emit("hardwareDataResponse", data);
+//   });
+
+//   // Слушане на събитието 'dataDoneTransmitting' от клиента
+//   socket.on("dataDoneTransmitting", (data) => {
+//     console.log("Получено съобщение за завършване на трансфер на данни:", data);
+//     // Изпращане на сигнал до останалите клиенти, че изпращащото приложение (python app) е спряло потока от данни.
+//     socket.broadcast.emit("dataDoneTransmittingSignal");
+//   });
+
+//   // Слушане за прекъсване на връзката от клиент
+//   socket.on("disconnect", () => {
+//     console.log("Клиентът прекъсна връзката");
+//   });
+// });
+
 // Стартиране на сървъра
 server.listen(5000, () => {
   console.log("Server started on port 5000.");
