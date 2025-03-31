@@ -209,6 +209,7 @@ const Landing: FC<LandingProps> = () => {
             />
           </div>
         </section>
+
         <section
           className="section bg-black/5 dark:!bg-black/10 text-defaulttextcolor"
           id="description"
@@ -378,6 +379,37 @@ const Landing: FC<LandingProps> = () => {
                       <i className="ri-arrow-right-s-line align-middle rtl:rotate-180"></i>
                     </Link>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          className="section bg-white dark:bg-black/20 text-defaultsize text-defaulttextcolor"
+          id="trailer"
+        >
+          <div className="container text-center">
+            <div className="justify-center text-center mb-12">
+              <div className="xl:col-span-6 col-span-12">
+                <h3 className="font-semibold opsilion !text-4xl mb-2">
+                  Вижте как работи АртКомпас
+                </h3>
+                <span className="text-[#8c9097] dark:text-white/50 text-[0.9375rem] font-normal block">
+                  Кратка видео демонстрация на основните функционалности на
+                  приложението
+                </span>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-full max-w-4xl rounded-xl overflow-hidden shadow-lg">
+                <div className="aspect-video">
+                  <iframe
+                    className="w-full h-full"
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                    title="АртКомпас Демонстрация"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
                 </div>
               </div>
             </div>
