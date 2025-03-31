@@ -216,13 +216,48 @@ const Landing: FC<LandingProps> = () => {
           <div className="container text-center">
             <div className="justify-center text-center mb-12">
               <div className="xl:col-span-6 col-span-12">
-                <h3 className="font-semibold opsilion !text-4xl mb-2">
-                  Вижте как работи АртКомпас
+                <h3 className="font-semibold opsilion !text-4xl mb-2 flex items-center justify-center gap-2 text-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    className="lucide lucide-brain-icon lucide-brain"
+                  >
+                    <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+                    <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+                    <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4" />
+                    <path d="M17.599 6.5a3 3 0 0 0 .399-1.375" />
+                    <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5" />
+                    <path d="M3.477 10.896a4 4 0 0 1 .585-.396" />
+                    <path d="M19.938 10.5a4 4 0 0 1 .585.396" />
+                    <path d="M6 18a4 4 0 0 1-1.967-.516" />
+                    <path d="M19.967 17.484A4 4 0 0 1 18 18" />
+                  </svg>
+                  Натиснете видеото и разгледайте АртКомпас в действие!
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-clapperboard-icon lucide-clapperboard"
+                  >
+                    <path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z" />
+                    <path d="m6.2 5.3 3.1 3.9" />
+                    <path d="m12.4 3.4 3.1 4" />
+                    <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+                  </svg>
                 </h3>
-                <span className="text-[#8c9097] dark:text-white/50 text-[0.9375rem] font-normal block">
-                  Кратка видео демонстрация на основните функционалности на
-                  приложението
-                </span>
               </div>
             </div>
             <div className="flex justify-center">
