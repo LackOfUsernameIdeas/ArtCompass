@@ -1209,13 +1209,29 @@ export const getMarginClass = (question: Question): string => {
 
 /**
  * Връща CSS клас, който задава марж в зависимост от текущата стъпка.
+ * Ако мозъчният анализ е завършен, след 300ms се прилага нулев марж.
  *
  * @function getBrainAnalysisMarginClass
- * @param {Question} i - Индекс на текущата стъпка.
- * @returns {string} - Строка с CSS клас, който определя маржа за стъпката.
+ * @param {number} i - Индекс на текущата стъпка.
+ * @param {boolean} isBrainAnalysisComplete - Флаг дали мозъчният анализ е завършен.
+ * @returns {Promise<string>} - Promise, който връща CSS клас след закъснение.
  */
-export const getBrainAnalysisMarginClass = (i: number): string => {
-  console.log("getBrainAnalysisMarginClass triggered with:", i);
+export const getBrainAnalysisMarginClass = async (
+  i: number,
+  isBrainAnalysisComplete: boolean
+): Promise<string> => {
+  console.log(
+    "getBrainAnalysisMarginClass triggered with:",
+    i,
+    "isBrainAnalysisComplete:",
+    isBrainAnalysisComplete
+  );
+
+  if (isBrainAnalysisComplete) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve("mt-0"), 500);
+    });
+  }
 
   switch (i) {
     case 6:
@@ -1225,9 +1241,9 @@ export const getBrainAnalysisMarginClass = (i: number): string => {
       return "mt-[5rem]";
     case 5:
       return "mt-[6rem]";
-    default:
-      return "mt-[7rem]";
     case 2:
       return "mt-[8rem]";
+    default:
+      return "mt-[7rem]";
   }
 };

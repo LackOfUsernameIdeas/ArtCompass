@@ -209,7 +209,6 @@ const Landing: FC<LandingProps> = () => {
             />
           </div>
         </section>
-
         <section
           className="section bg-black/5 dark:!bg-black/10 text-defaulttextcolor"
           id="description"
