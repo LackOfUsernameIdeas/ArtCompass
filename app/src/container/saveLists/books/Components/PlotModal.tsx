@@ -32,7 +32,7 @@ export const PlotModal: FC<PlotModalProps> = ({ isOpen, onClose, plot }) => {
             transition: "opacity 300ms, transform 300ms"
           }}
         >
-          <h2 className="text-lg font-semibold">Пълен сюжет</h2>
+          <h2 className="text-lg font-semibold">Пълно описание</h2>
           <p className="text-sm">{plot}</p>
           <div className="flex justify-end space-x-4">
             <button

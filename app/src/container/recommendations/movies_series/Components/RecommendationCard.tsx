@@ -266,7 +266,7 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
             {recommendation.description &&
               recommendation.description.length > plotPreviewLength && (
                 <button
-                  onClick={openModal}
+                  onClick={() => openModal("description")}
                   className="mt-2 underline hover:scale-105 transition"
                 >
                   Пълно описание
@@ -286,7 +286,7 @@ const RecommendationCard: FC<RecommendationCardProps> = ({
 
             {translatedPlot && translatedPlot.length > plotPreviewLength && (
               <button
-                onClick={openModal}
+                onClick={() => openModal("plot")}
                 className="mt-2 underline hover:scale-105 transition"
               >
                 Пълен сюжет

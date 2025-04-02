@@ -121,6 +121,8 @@ export async function translate(entry: string): Promise<string> {
       .map((item: [string]) => item[0])
       .join(" ");
 
+    const cleanedTranslation = decodeURIComponent(flattenedTranslation);
+
     const mergedTranslation = flattenedTranslation.replace(/\s+/g, " ").trim();
     return mergedTranslation;
   } catch (error) {

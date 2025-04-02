@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa";
 import { SiRottentomatoes } from "react-icons/si";
-import { PlotModal } from "./PlotModal";
+import { PlotAndDescriptionModal } from "./PlotAndDescriptionModal";
 import { Rating, RecommendationCardAlertProps } from "../watchlist-types";
 import {
   handleMovieSeriesBookmarkClick,
@@ -26,6 +26,9 @@ const RecommendationCardAlert: FC<RecommendationCardAlertProps> = ({
   const [translatedLanguage, setTranslatedLanguage] = useState<string>(""); // Преведеният език
   const [visible, setVisible] = useState(false); // Показване на компонента
   const [isModalOpen, setIsModalOpen] = useState(false); // Статус на модалния прозорец
+  const [modalType, setModalType] = useState<"description" | "plot">(
+    "description"
+  );
   const [modalData, setModalData] = useState<string | undefined>(""); // Данни за съдържанието на модалния прозорец
   const previewLength = 70; // Дължина на прегледа на съдържанието (oписаниeто и сюжета)
   const modalRef = useRef<HTMLDivElement>(null); // Референция към модалния контейнер за директна манипулация в DOM
@@ -87,10 +90,11 @@ const RecommendationCardAlert: FC<RecommendationCardAlertProps> = ({
   };
 
   // Отваря modal-а
-  const openModal = (type: string) => {
-    type === "description"
-      ? setModalData(selectedItem?.description)
-      : setModalData(translatedPlot);
+  const openModal = (type: "description" | "plot") => {
+    setModalType(type);
+    setModalData(
+      type === "description" ? selectedItem?.description || "" : translatedPlot
+    );
     setIsModalOpen(true);
   };
 
@@ -527,10 +531,11 @@ const RecommendationCardAlert: FC<RecommendationCardAlertProps> = ({
         </button>
       </div>
       {/*Modal за пълното описание/сюжет на филма/сериала*/}
-      <PlotModal
+      <PlotAndDescriptionModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        plot={modalData}
+        modalData={modalData}
+        modalType={modalType}
       />
     </div>
   );
