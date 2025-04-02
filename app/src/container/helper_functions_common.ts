@@ -121,7 +121,14 @@ export async function translate(entry: string): Promise<string> {
       .map((item: [string]) => item[0])
       .join(" ");
 
-    const cleanedTranslation = decodeURIComponent(flattenedTranslation);
+    // Check if the translated text contains URL-encoded sequences
+    const encodedPattern = /%[0-9A-Fa-f]{2}/;
+    if (encodedPattern.test(flattenedTranslation)) {
+      console.error(
+        `Invalid translation: Detected URL-encoded characters in response "${flattenedTranslation}"`
+      );
+      return entry;
+    }
 
     const mergedTranslation = flattenedTranslation.replace(/\s+/g, " ").trim();
     return mergedTranslation;
