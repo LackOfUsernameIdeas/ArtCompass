@@ -2132,8 +2132,6 @@ app.post("/save-brain-analysis", (req, res) => {
   });
 });
 
-const DATA_FILE = path.join(__dirname, "session_data.json");
-
 // Когато клиент се свърже със SocketIO сървъра
 io.on("connection", (socket) => {
   console.log("Клиент се свърза");
@@ -2142,8 +2140,14 @@ io.on("connection", (socket) => {
   socket.on("hardwareData", (data) => {
     console.log("Получени хардуерни данни:", data);
 
-    // Четене на JSON файла
-    fs.readFile(DATA_FILE, "utf8", (err, fileData) => {
+    // Взимаме session ID (ако няма, по подразбиране е 1)
+    const sessionId = data.sessionId || 1;
+    if (sessionId < 1 || sessionId > 5) {
+      console.error("Невалиден sessionId:", sessionId);
+      return;
+    }
+    const sessionFile = path.join(__dirname, `session_data_${sessionId}.json`);
+    fs.readFile(sessionFile, "utf8", (err, fileData) => {
       if (err) {
         console.error("Грешка при четене на файла:", err);
         return;
