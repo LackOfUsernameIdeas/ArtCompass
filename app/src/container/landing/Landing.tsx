@@ -214,36 +214,12 @@ const Landing: FC<LandingProps> = () => {
           id="trailer"
         >
           <div className="container text-center">
-            <div className="justify-center text-center mb-12">
-              <div className="xl:col-span-6 col-span-12">
-                <h3 className="font-semibold opsilion !text-4xl mb-2 flex items-center justify-center gap-2 text-center">
-                  Натиснете видеото и разгледайте АртКомпас в действие
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-clapperboard-icon lucide-clapperboard"
-                  >
-                    <path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z" />
-                    <path d="m6.2 5.3 3.1 3.9" />
-                    <path d="m12.4 3.4 3.1 4" />
-                    <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
-                  </svg>
-                </h3>
-              </div>
-            </div>
             <div className="flex justify-center">
               <div className="w-full max-w-4xl rounded-xl overflow-hidden shadow-lg">
                 <div className="aspect-video">
                   <iframe
                     className="w-full h-full"
-                    src="https://youtu.be/I8hR1u0apF0"
+                    src="https://www.youtube.com/embed/I8hR1u0apF0"
                     title="АртКомпас Демонстрация"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
