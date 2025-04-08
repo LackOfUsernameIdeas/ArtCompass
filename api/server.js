@@ -2132,7 +2132,7 @@ app.post("/save-brain-analysis", (req, res) => {
   });
 });
 
-// Когато клиент се свърже със SocketIO сървъра
+// Основна логика при нова връзка
 io.on("connection", (socket) => {
   console.log("Клиент се свърза");
   socket.emit("connectSignal");
@@ -2140,37 +2140,48 @@ io.on("connection", (socket) => {
   socket.on("hardwareData", (data) => {
     console.log("Получени хардуерни данни:", data);
 
-    // Взимаме session ID (ако няма, по подразбиране е 1)
-    const sessionId = data.sessionId || 1;
-    if (sessionId < 1 || sessionId > 5) {
-      console.error("Невалиден sessionId:", sessionId);
-      return;
-    }
-    const sessionFile = path.join(__dirname, `session_data_${sessionId}.json`);
-    fs.readFile(sessionFile, "utf8", (err, fileData) => {
-      if (err) {
-        console.error("Грешка при четене на файла:", err);
+    const useFileMode = data.useFileMode === true; // дали искаме да симулираме от файл
+
+    if (useFileMode) {
+      // ----------- FILE MODE: Симулация чрез JSON файл ----------- //
+      const sessionId = data.sessionId || 1;
+      if (sessionId < 1 || sessionId > 5) {
+        console.error("Невалиден sessionId:", sessionId);
         return;
       }
 
-      let jsonData;
-      try {
-        jsonData = JSON.parse(fileData);
-      } catch (parseErr) {
-        console.error("Грешка при парсиране на JSON:", parseErr);
-        return;
-      }
+      const sessionFile = path.join(
+        __dirname,
+        `session_data_${sessionId}.json`
+      );
+      fs.readFile(sessionFile, "utf8", (err, fileData) => {
+        if (err) {
+          console.error("Грешка при четене на файла:", err);
+          return;
+        }
 
-      // Изпращане на данните един по един
-      jsonData.forEach((item, index) => {
-        setTimeout(() => {
-          socket.broadcast.emit("hardwareDataResponse", item);
-          if (index === jsonData.length - 1) {
-            socket.broadcast.emit("dataDoneTransmittingSignal");
-          }
-        }, index * 500); // Интервал между съобщенията
+        let jsonData;
+        try {
+          jsonData = JSON.parse(fileData);
+        } catch (parseErr) {
+          console.error("Грешка при парсиране на JSON:", parseErr);
+          return;
+        }
+
+        jsonData.forEach((item, index) => {
+          setTimeout(() => {
+            socket.broadcast.emit("hardwareDataResponse", item);
+            if (index === jsonData.length - 1) {
+              socket.broadcast.emit("dataDoneTransmittingSignal");
+            }
+          }, index * 500); // можеш да смениш интервала според реална скорост
+        });
       });
-    });
+    } else {
+      // ----------- REAL MODE: Работа с реален хардуер ----------- //
+      // директно препращаме данните
+      socket.broadcast.emit("hardwareDataResponse", data);
+    }
   });
 
   socket.on("dataDoneTransmitting", (data) => {
@@ -2182,34 +2193,6 @@ io.on("connection", (socket) => {
     console.log("Клиентът прекъсна връзката");
   });
 });
-
-// // Когато клиент се свърже със SocketIO сървъра
-// io.on("connection", (socket) => {
-//   console.log("Клиент се свърза");
-
-//   // Това ще изпрати първоначален сигнал на клиента, който се свързва.
-//   socket.emit("connectSignal");
-
-//   // Слушане на събитието 'hardwareData' от изпращащото приложение (python app)
-//   socket.on("hardwareData", (data) => {
-//     console.log("Получени хардуерни данни:", data);
-
-//     // Изпращане на данните към всички свързани клиенти, освен към изпращащия (защото е безсмислено)
-//     socket.broadcast.emit("hardwareDataResponse", data);
-//   });
-
-//   // Слушане на събитието 'dataDoneTransmitting' от клиента
-//   socket.on("dataDoneTransmitting", (data) => {
-//     console.log("Получено съобщение за завършване на трансфер на данни:", data);
-//     // Изпращане на сигнал до останалите клиенти, че изпращащото приложение (python app) е спряло потока от данни.
-//     socket.broadcast.emit("dataDoneTransmittingSignal");
-//   });
-
-//   // Слушане за прекъсване на връзката от клиент
-//   socket.on("disconnect", () => {
-//     console.log("Клиентът прекъсна връзката");
-//   });
-// });
 
 // Стартиране на сървъра
 server.listen(5000, () => {
