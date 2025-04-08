@@ -219,7 +219,7 @@ const Landing: FC<LandingProps> = () => {
                 <div className="aspect-video">
                   <iframe
                     className="w-full h-full"
-                    src="https://www.youtube.com/embed/I8hR1u0apF0"
+                    src="https://www.youtube.com/embed/YcEUpXmk9Rc"
                     title="АртКомпас Демонстрация"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
