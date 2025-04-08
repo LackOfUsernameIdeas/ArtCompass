@@ -2174,7 +2174,7 @@ io.on("connection", (socket) => {
             if (index === jsonData.length - 1) {
               socket.broadcast.emit("dataDoneTransmittingSignal");
             }
-          }, index * 500); // можеш да смениш интервала според реална скорост
+          }, index * 1000); // можеш да смениш интервала според реална скорост
         });
       });
     } else {
